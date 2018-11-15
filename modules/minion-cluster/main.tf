@@ -2,8 +2,6 @@ provider "azurerm" {
   subscription_id = "${var.subscription_id}"
 }
 
-# NIC
-
 resource "azurerm_network_interface" "main" {
   count = "${var.num_of_minions}"
 
@@ -19,8 +17,6 @@ resource "azurerm_network_interface" "main" {
   }
 }
 
-# minion config
-
 data "template_file" "minion_config" {
   count = "${var.num_of_minions}"
 
@@ -31,8 +27,6 @@ data "template_file" "minion_config" {
     master_address = "${var.salt_master_address}"
   }
 }
-
-# VM
 
 resource "azurerm_virtual_machine" "main" {
   count = "${var.num_of_minions}"
@@ -81,18 +75,15 @@ resource "azurerm_virtual_machine" "main" {
     timeout     = "1m"
   }
 
-  # Setup Walmart
-
   provisioner "remote-exec" {
     script = "${path.module}/../../scripts/setup_walmart.sh"
   }
-
-  # Install Salt
 
   provisioner "file" {
     source      = "${path.module}/../../scripts/install_salt.sh"
     destination = "/tmp/install_salt.sh"
   }
+
   provisioner "remote-exec" {
     inline = [
       "sudo chmod +x /tmp/install_salt.sh",
@@ -100,17 +91,17 @@ resource "azurerm_virtual_machine" "main" {
     ]
   }
 
-  # Configure minion
-
   provisioner "file" {
     content     = "${data.template_file.minion_config.*.rendered[count.index]}"
     destination = "/tmp/minion"
   }
+
   provisioner "remote-exec" {
     inline = [
       "sudo mv /tmp/minion /etc/salt/minion",
       "sudo service salt-minion restart",
     ]
   }
+
   tags = "${var.tags}"
 }

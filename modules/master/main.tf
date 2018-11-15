@@ -2,8 +2,6 @@ provider "azurerm" {
   subscription_id = "${var.subscription_id}"
 }
 
-# NIC
-
 resource "azurerm_network_interface" "main" {
   name                = "${var.prefix}-${var.name}-nic"
   resource_group_name = "${var.resource_group_name}"
@@ -16,8 +14,6 @@ resource "azurerm_network_interface" "main" {
     private_ip_address_allocation = "dynamic"
   }
 }
-
-# VM
 
 resource "azurerm_virtual_machine" "main" {
   name                  = "${var.prefix}-${var.name}-vm"
@@ -64,23 +60,21 @@ resource "azurerm_virtual_machine" "main" {
     timeout     = "1m"
   }
 
-  # Setup Walmart
-
   provisioner "remote-exec" {
     script = "${path.module}/../../scripts/setup_walmart.sh"
   }
-
-  # Install Salt
 
   provisioner "file" {
     source      = "${path.module}/../../scripts/install_salt.sh"
     destination = "/tmp/install_salt.sh"
   }
+
   provisioner "remote-exec" {
     inline = [
       "sudo chmod +x /tmp/install_salt.sh",
       "SALT_VERSION=${var.salt_version} sudo -E /tmp/install_salt.sh master",
     ]
   }
+
   tags = "${var.tags}"
 }
