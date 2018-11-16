@@ -61,6 +61,10 @@ resource "azurerm_virtual_machine" "main" {
   }
 
   provisioner "remote-exec" {
+    script = "${path.module}/../../scripts/wait_cloud_init.sh"
+  }
+
+  provisioner "remote-exec" {
     script = "${path.module}/../../scripts/setup_walmart.sh"
   }
 
