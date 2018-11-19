@@ -96,13 +96,24 @@ resource "azurerm_virtual_machine" "main" {
   }
 
   provisioner "file" {
+    content     = "${jsonencode(var.grains)}"
+    destination = "/tmp/salt/grains"
+  }
+
+  provisioner "file" {
     content     = "${data.template_file.minion_config.*.rendered[count.index]}"
-    destination = "/tmp/minion"
+    destination = "/tmp/salt/minion"
   }
 
   provisioner "remote-exec" {
     inline = [
-      "sudo mv /tmp/minion /etc/salt/minion",
+      "sudo mv /tmp/salt/grains /etc/salt/grains",
+      "sudo mv /tmp/salt/minion /etc/salt/minion",
+    ]
+  }
+
+  provisioner "remote-exec" {
+    inline = [
       "sudo service salt-minion restart",
     ]
   }
