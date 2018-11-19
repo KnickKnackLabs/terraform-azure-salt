@@ -97,18 +97,18 @@ resource "azurerm_virtual_machine" "main" {
 
   provisioner "file" {
     content     = "${jsonencode(var.grains)}"
-    destination = "/tmp/salt/grains"
+    destination = "/tmp/grains"
   }
 
   provisioner "file" {
     content     = "${data.template_file.minion_config.*.rendered[count.index]}"
-    destination = "/tmp/salt/minion"
+    destination = "/tmp/minion"
   }
 
   provisioner "remote-exec" {
     inline = [
-      "sudo mv /tmp/salt/grains /etc/salt/grains",
-      "sudo mv /tmp/salt/minion /etc/salt/minion",
+      "sudo mv /tmp/grains /etc/salt/grains",
+      "sudo mv /tmp/minion /etc/salt/minion",
     ]
   }
 
