@@ -79,8 +79,16 @@ resource "azurerm_virtual_machine" "main" {
     script = "${path.module}/../../scripts/wait_cloud_init.sh"
   }
 
+  provisioner "file" {
+    source      = "${path.module}/../../scripts/setup_walmart_apt_repos.sh"
+    destination = "/tmp/setup_walmart_apt_repos.sh"
+  }
+
   provisioner "remote-exec" {
-    script = "${path.module}/../../scripts/setup_walmart.sh"
+    inline = [
+      "sudo chmod +x /tmp/setup_walmart_apt_repos.sh",
+      "sudo /tmp/setup_walmart_apt_repos.sh",
+    ]
   }
 
   provisioner "file" {
