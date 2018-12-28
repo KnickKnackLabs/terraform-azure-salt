@@ -57,18 +57,24 @@ EOF
 sudo apt-get update
 
 # Allow choosing which salt service to install (salt-master, salt-minion, etc)
-SALT_SERVICE=${1:-}
+SALT_SERVICES=()
 
-case $SALT_SERVICE in
-    master|salt-master)
-        sudo apt-get install -y salt-master
-        ;;
+for SALT_SERVICE in $@; do
+    case $SALT_SERVICE in
+        master|salt-master)
+            SALT_SERVICES+=('salt-master')
+            ;;
 
-    minion|salt-minion)
-        sudo apt-get install -y salt-minion
-        ;;
+        minion|salt-minion)
+            SALT_SERVICES+=('salt-minion')
+            ;;
 
-    *)
-        echo $"Usage: SALT_VERSION=2018.3 install_salt.sh (master|minion)"
-        exit 1
-esac
+        *)
+            echo $"Usage: SALT_VERSION=2018.3 install_salt.sh (master|minion)"
+            exit 1
+    esac
+done
+
+for SALT_SERVICE in ${SALT_SERVICES[@]}; do
+    sudo apt-get install -y $SALT_SERVICE
+done

@@ -55,3 +55,9 @@ variable "tags" {
   default     = {}
   description = "Any tags which should be assigned to the resources"
 }
+
+variable "grains" {
+  type        = "map"
+  default     = {}
+  description = "Grains to set on the minion"
+}

@@ -15,6 +15,15 @@ resource "azurerm_network_interface" "main" {
   }
 }
 
+data "template_file" "minion_config" {
+  template = "${file("${path.module}/files/minion.tpl")}"
+
+  vars {
+    minion_id      = "${var.prefix}-${var.name}"
+    master_address = "localhost"
+  }
+}
+
 resource "azurerm_virtual_machine" "main" {
   name                  = "${var.prefix}-${var.name}-vm"
   resource_group_name   = "${var.resource_group_name}"
@@ -84,7 +93,30 @@ resource "azurerm_virtual_machine" "main" {
   provisioner "remote-exec" {
     inline = [
       "sudo chmod +x /tmp/install_salt.sh",
-      "SALT_VERSION=${var.salt_version} sudo -E /tmp/install_salt.sh master",
+      "SALT_VERSION=${var.salt_version} sudo -E /tmp/install_salt.sh master minion",
+    ]
+  }
+
+  provisioner "file" {
+    content     = "${jsonencode(var.grains)}"
+    destination = "/tmp/grains"
+  }
+
+  provisioner "file" {
+    content     = "${data.template_file.minion_config.rendered}"
+    destination = "/tmp/minion"
+  }
+
+  provisioner "remote-exec" {
+    inline = [
+      "sudo mv /tmp/grains /etc/salt/grains",
+      "sudo mv /tmp/minion /etc/salt/minion",
+    ]
+  }
+
+  provisioner "remote-exec" {
+    inline = [
+      "sudo service salt-minion restart",
     ]
   }
 
