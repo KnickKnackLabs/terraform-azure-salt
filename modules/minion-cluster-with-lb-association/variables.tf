@@ -12,6 +12,10 @@ variable "subnet_id" {
   description = "The ID of the Subnet under which the instance will be available"
 }
 
+variable "lb_backend_address_pool_id" {
+  description = "A Load Balancer backend address pool ID to associate the minions with"
+}
+
 variable "salt_master_address" {
   description = "The address the minion can use to reach the salt master"
 }

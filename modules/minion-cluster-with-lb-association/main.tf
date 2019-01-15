@@ -17,6 +17,14 @@ resource "azurerm_network_interface" "main" {
   }
 }
 
+resource "azurerm_network_interface_backend_address_pool_association" "main" {
+  count = "${var.num_of_minions}"
+
+  network_interface_id    = "${azurerm_network_interface.main.*.id[count.index]}"
+  ip_configuration_name   = "${var.prefix}-${var.name}-${count.index + 1}-ip-configuration"
+  backend_address_pool_id = "${var.lb_backend_address_pool_id}"
+}
+
 data "template_file" "minion_config" {
   count = "${var.num_of_minions}"
 
