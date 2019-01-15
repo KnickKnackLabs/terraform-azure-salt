@@ -66,7 +66,7 @@ variable "tags" {
 }
 
 variable "grains" {
-  type = "map"
-  default = {}
+  type        = "map"
+  default     = {}
   description = "Grains to set on the minion"
 }
