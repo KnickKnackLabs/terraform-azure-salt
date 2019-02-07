@@ -10,6 +10,8 @@ resource "azurerm_network_interface" "main" {
   location            = "${var.location}"
   tags                = "${var.tags}"
 
+  network_security_group_id = "${var.network_security_group_id}"
+
   ip_configuration {
     name                          = "${var.prefix}-${var.name}-${count.index + 1}-ip-configuration"
     subnet_id                     = "${var.subnet_id}"
