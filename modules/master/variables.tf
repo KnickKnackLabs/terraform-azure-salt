@@ -35,6 +35,16 @@ variable "instance_size" {
   default     = "Standard_F2"
 }
 
+variable "network_security_group_id" {
+  description = "The security group to put the network interface under"
+  default     = ""
+}
+
+variable "application_security_group_ids" {
+  description = "The application security groups to put the network interface under"
+  default     = []
+}
+
 variable "prefix" {
   description = "A prefix for the instance and all of its associated resources"
   default     = "salt-master"
