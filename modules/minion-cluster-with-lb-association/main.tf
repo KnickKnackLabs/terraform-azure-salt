@@ -16,6 +16,8 @@ resource "azurerm_network_interface" "main" {
     name                          = "${var.prefix}-${var.name}-${count.index + 1}-ip-configuration"
     subnet_id                     = "${var.subnet_id}"
     private_ip_address_allocation = "dynamic"
+
+    application_security_group_ids = "${var.application_security_group_ids}"
   }
 }
 
