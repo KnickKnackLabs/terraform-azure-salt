@@ -40,7 +40,7 @@ variable "instance_size" {
 }
 
 variable "disk_size_gb" {
-  description = "Specifies the size of the main disk in GB."
+  description = "Specifies the size of the OS disk in GB."
   default     = ""
 }
 
