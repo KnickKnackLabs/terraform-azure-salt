@@ -35,6 +35,11 @@ variable "instance_size" {
   default     = "Standard_F2"
 }
 
+variable "disk_size_gb" {
+  description = "Specifies the size of the OS disk in GB."
+  default     = ""
+}
+
 variable "network_security_group_id" {
   description = "The security group to put the network interface under"
   default     = ""
