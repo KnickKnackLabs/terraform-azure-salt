@@ -45,7 +45,7 @@ variable "instance_size" {
 
 variable "disk_size_gb" {
   description = "Specifies the size of the OS disk in GB."
-  default     = ""
+  default     = 30
 }
 
 variable "network_security_group_id" {
