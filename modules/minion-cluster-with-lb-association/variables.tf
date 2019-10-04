@@ -48,6 +48,11 @@ variable "disk_size_gb" {
   default     = 30
 }
 
+variable "managed_disk_type" {
+  description = "Specifies the type of the managed OS disk"
+  default     = "Standard_LRS"
+}
+
 variable "network_security_group_id" {
   description = "The security group to put the network interfaces under"
   default     = ""
