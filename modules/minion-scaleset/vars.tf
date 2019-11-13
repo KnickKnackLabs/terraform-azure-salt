@@ -28,11 +28,15 @@ variable "subnet_id" {
 }
 
 variable "prefix" {
-    description = "Prefix for the scaleset"
+  description = "Prefix for the scaleset"
 }
 
 variable "cloud_init" {
-    description = "Cloud init used to initialize the machine with"
+  description = "Cloud init used to initialize the machine with"
+}
+
+variable "admin_username" {
+  description = "Admin username"
 }
 
 # ------------------------------------------------------------------------------
@@ -42,7 +46,7 @@ variable "cloud_init" {
 
 variable "initial_cluster_size" {
   description = "Initial Size of VMSS"
-  default = "0"
+  default = 0
 }
 
 variable "instance_tier" {
@@ -52,10 +56,15 @@ variable "instance_tier" {
 
 variable "single_placement_group" {
   description = "Specifies whether the scale set is limited to a single placement group with a maximum size of 100 virtual machines."
-  default     = "true"
+  default     = true
 }
 
 variable "ignore_change_state" {
   description = "Ignore the list of properties. Useful for autoscaling with [\"sku.0.capacity\"]"
   default = []
+}
+
+variable "admin_password" {
+  description = "Admin password (unused)"
+  default = ""
 }
