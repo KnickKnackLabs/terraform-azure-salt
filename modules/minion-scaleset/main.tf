@@ -16,9 +16,12 @@ module "qa-scus-optimization-workers-vmss" {
   subnet_id       = "${var.subnet_id}
 }
 **/
+provider "azurerm" {
+  subscription_id = "${var.subscription_id}"
+}
 
 resource "azurerm_resource_group" "minion_vmss_resource_group" {
-  name     = "${var.resoure_group_name}"
+  name     = "${var.resource_group_name}"
   location = "${var.location}"
 }
 
@@ -31,14 +34,14 @@ resource "azurerm_virtual_machine_scale_set" "minion_scaleset" {
   overprovision          = false
   single_placement_group = "${var.single_placement_group}"
 
-  lifecycle {
-    ignore_changes = ["sku.0.capacity"]
-  }
-
   sku {
     name     = "${var.instance_size}"
     tier     = "${var.instance_tier}"
     capacity = "${var.initial_cluster_size}"
+  }
+
+  lifecycle {
+    ignore_changes = ["sku[0].capacity"]
   }
 
   os_profile {
@@ -64,10 +67,18 @@ resource "azurerm_virtual_machine_scale_set" "minion_scaleset" {
     }
   }
 
+  storage_profile_image_reference {
+    publisher = "Canonical"
+    offer     = "UbuntuServer"
+    sku       = "16.04-LTS"
+    version   = "latest"
+  }
+
   storage_profile_os_disk {
     name              = ""
     caching           = "ReadWrite"
     os_type           = "Linux"
     managed_disk_type = "Standard_LRS"
+    create_option     = "FromImage"
   }
 }
