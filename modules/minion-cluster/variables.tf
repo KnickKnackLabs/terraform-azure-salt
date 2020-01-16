@@ -90,3 +90,8 @@ variable "grains" {
   default     = {}
   description = "Grains to set on the minion"
 }
+
+variable "availability_set" {
+  description = "Enable availability set for high availability"
+  default     = false
+}

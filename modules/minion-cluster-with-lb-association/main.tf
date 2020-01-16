@@ -29,6 +29,14 @@ resource "azurerm_network_interface_backend_address_pool_association" "main" {
   backend_address_pool_id = "${var.lb_backend_address_pool_id}"
 }
 
+resource "azurerm_availability_set" "main" {
+  count               = "${var.availability_set ? 1 : 0}"
+  name                = "${var.prefix}-${var.name}-as"
+  location            = "${var.location}"
+  resource_group_name = "${var.resource_group_name}"
+  managed             = true
+}
+
 data "template_file" "minion_config" {
   count = "${var.num_of_minions}"
 
@@ -45,6 +53,7 @@ resource "azurerm_virtual_machine" "main" {
 
   name                  = "${var.prefix}-${var.name}-${count.index + 1}-vm"
   resource_group_name   = "${var.resource_group_name}"
+  availability_set_id   = "${var.availability_set ? join("", azurerm_availability_set.main.*.id) : ""}"
   location              = "${var.location}"
   vm_size               = "${var.instance_size}"
   network_interface_ids = ["${azurerm_network_interface.main.*.id[count.index]}"]
