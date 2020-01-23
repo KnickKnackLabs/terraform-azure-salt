@@ -40,6 +40,23 @@ data "template_file" "minion_config" {
   }
 }
 
+resource "azurerm_managed_disk" "main" {
+  count                = "${var.storage_data_disk["disk_size_gb"] > 0 ? 1 : 0}"
+  name                 = "${var.prefix}-${var.name}-${count.index + 1}-datadisk"
+  disk_size_gb         = "${var.storage_data_disk["disk_size_gb"]}"
+  location             = "${var.location}"
+  resource_group_name  = "${var.resource_group_name}"
+  storage_account_type = "${var.storage_data_disk["storage_account_type"]}"
+  create_option        = "Empty"
+}
+
+resource "azurerm_virtual_machine_data_disk_attachment" "main" {
+  managed_disk_id    = "${azurerm_managed_disk.main.id}"
+  virtual_machine_id = "${azurerm_virtual_machine.main.id}"
+  lun                = "${var.storage_data_disk["lun"]}"
+  caching            = "${var.storage_data_disk["caching"]}"
+}
+
 resource "azurerm_virtual_machine" "main" {
   count = "${var.num_of_minions}"
 
