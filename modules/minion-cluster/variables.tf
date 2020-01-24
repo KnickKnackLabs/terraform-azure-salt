@@ -97,7 +97,7 @@ variable "availability_set" {
 }
 
 variable "storage_data_disk" {
-  description = "Storage Data Disk" //TODO
+  description = "Storage Data Disk to attach to the VM"
   type        = "map"
 
   default = {
