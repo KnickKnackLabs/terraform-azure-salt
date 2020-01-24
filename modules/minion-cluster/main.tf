@@ -41,7 +41,7 @@ data "template_file" "minion_config" {
 }
 
 resource "azurerm_managed_disk" "main" {
-  count                = "${var.storage_data_disk["disk_size_gb"] > 0 ? 1 : 0}"
+  count                = "${var.storage_data_disk["disk_size_gb"] > 0 ? var.num_of_minions : 0}"
   name                 = "${var.prefix}-${var.name}-${count.index + 1}-datadisk"
   disk_size_gb         = "${var.storage_data_disk["disk_size_gb"]}"
   location             = "${var.location}"
@@ -51,8 +51,9 @@ resource "azurerm_managed_disk" "main" {
 }
 
 resource "azurerm_virtual_machine_data_disk_attachment" "main" {
-  managed_disk_id    = "${azurerm_managed_disk.main.id}"
-  virtual_machine_id = "${azurerm_virtual_machine.main.id}"
+  count              = "${var.storage_data_disk["disk_size_gb"] > 0 ? var.num_of_minions : 0}"
+  managed_disk_id    = "${azurerm_managed_disk.main.*.id[count.index]}"
+  virtual_machine_id = "${azurerm_virtual_machine.main.*.id[count.index]}"
   lun                = "${var.storage_data_disk["lun"]}"
   caching            = "${var.storage_data_disk["caching"]}"
 }
