@@ -95,3 +95,15 @@ variable "availability_set" {
   description = "Enable availability set for high availability"
   default     = false
 }
+
+variable "storage_data_disk" {
+  description = "Storage Data Disk to attach to the VM"
+  type        = "map"
+
+  default = {
+    disk_size_gb         = 0
+    lun                  = 0
+    caching              = "None"
+    storage_account_type = "Standard_LRS"
+  }
+}
