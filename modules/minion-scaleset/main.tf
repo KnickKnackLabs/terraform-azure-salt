@@ -41,7 +41,7 @@ resource "azurerm_virtual_machine_scale_set" "minion_scaleset" {
   }
 
   lifecycle {
-    ignore_changes = ["sku[0].capacity"]
+    ignore_changes = ["tags", "sku[0].capacity"]
   }
 
   os_profile {

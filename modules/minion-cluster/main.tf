@@ -19,6 +19,10 @@ resource "azurerm_network_interface" "main" {
 
     application_security_group_ids = ["${var.application_security_group_ids}"]
   }
+
+  lifecycle {
+    ignore_changes = ["tags"]
+  }
 }
 
 resource "azurerm_availability_set" "main" {
@@ -159,4 +163,8 @@ resource "azurerm_virtual_machine" "main" {
   }
 
   tags = "${var.tags}"
+
+  lifecycle {
+    ignore_changes = ["tags"]
+  }
 }
