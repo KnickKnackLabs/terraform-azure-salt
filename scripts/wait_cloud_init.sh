@@ -34,4 +34,3 @@ FINISH_TIME=$(current_timestamp)
 TOTAL_DURATION=$(( FINISH_TIME - START_TIME ))
 
 echo "--> Finished waiting for cloud-init to finish after $TOTAL_DURATION seconds."
-
