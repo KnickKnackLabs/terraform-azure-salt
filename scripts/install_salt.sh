@@ -2,11 +2,6 @@
 
 set -euxo pipefail
 
-# Configure apt to proxy via Walmart
-cat >> /etc/apt/apt.conf.d/01salt << EOF
-Acquire::http::Proxy::repo.saltstack.com "http://sysproxy.wal-mart.com:8080/";
-EOF
-
 # Add Salt's apt repo key
 sudo apt-key add - << EOF
 -----BEGIN PGP PUBLIC KEY BLOCK-----

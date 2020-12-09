@@ -79,18 +79,6 @@ resource "azurerm_linux_virtual_machine" "main" {
   }
 
   provisioner "file" {
-    source      = "${local.scripts_path}/setup_walmart_apt_repos.sh"
-    destination = "/tmp/setup_walmart_apt_repos.sh"
-  }
-
-  provisioner "remote-exec" {
-    inline = [
-      "sudo chmod +x /tmp/setup_walmart_apt_repos.sh",
-      "sudo /tmp/setup_walmart_apt_repos.sh",
-    ]
-  }
-
-  provisioner "file" {
     source      = "${local.scripts_path}/install_salt.sh"
     destination = "/tmp/install_salt.sh"
   }
