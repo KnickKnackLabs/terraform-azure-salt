@@ -11,6 +11,14 @@ locals {
   scripts_path = "${path.module}/../../scripts"
 }
 
+resource "azurerm_public_ip" "main" {
+  resource_group_name = var.resource_group_name
+  name                = "${var.prefix}-${var.name}-public-ip"
+  location            = var.location
+  sku                 = "Standard"
+  allocation_method   = "Static"
+}
+
 resource "azurerm_network_interface" "main" {
   name                = "${var.prefix}-${var.name}-nic"
   resource_group_name = var.resource_group_name
@@ -20,7 +28,8 @@ resource "azurerm_network_interface" "main" {
   ip_configuration {
     name                          = "${var.prefix}-${var.name}-ip-configuration"
     subnet_id                     = var.subnet_id
-    private_ip_address_allocation = "dynamic"
+    private_ip_address_allocation = "Dynamic"
+    public_ip_address_id          = azurerm_public_ip.main.id
   }
 
   lifecycle {
