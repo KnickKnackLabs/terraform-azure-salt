@@ -93,6 +93,9 @@ resource "azurerm_linux_virtual_machine" "main" {
     user        = var.auth["user"]
     private_key = var.auth["private_key"]
     timeout     = "1m"
+
+    bastion_host        = var.salt_master_address
+    bastion_private_key = var.auth["private_key"]
   }
 
   provisioner "remote-exec" {

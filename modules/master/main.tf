@@ -77,7 +77,7 @@ resource "azurerm_linux_virtual_machine" "main" {
   }
 
   connection {
-    host        = azurerm_network_interface.main.private_ip_address
+    host        = azurerm_public_ip.main.ip_address
     user        = var.auth["user"]
     private_key = var.auth["private_key"]
     timeout     = "1m"
